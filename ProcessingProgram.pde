@@ -1,36 +1,37 @@
+//TODO:Make function that will convert relative into absolute!! 
 import processing.serial.*;
-import processing.net.*; 
+import processing.net.*;
 Client myClient;
 Serial serial,robot;
 int cam = 123;
 PImage img;
 float Fx = 0,Fy = 0;
 char put = 0;
-target target1 = new target(); 
+target target1 = new target();
 void setup() {
   size(1280,720);
   frameRate(30);
   colorMode(RGB);
-  myClient = new Client(this,"192.168.0.7",55555); 
+  myClient = new Client(this,"192.168.0.7",55555);
   serial = new Serial(this, "COM3", 9600);
   robot = new Serial(this,"COM8", 115200);
   img = loadImage("img_0.jpg");
 }
- 
+
 void draw() {
   if(serial.available()>0){
     cam =serial.read()-122;
   }
   if (myClient.available() > 0) {
     String dataIn = myClient.readStringUntil('\n');
- 
-    if ( dataIn != null ) {      
-      if ( dataIn.indexOf("Num=")==0 ) {    
+
+    if ( dataIn != null ) {
+      if ( dataIn.indexOf("Num=")==0 ) {
         int num = int(split(trim(dataIn),' ' )[1]);
-        for (int i=0; i<num; i++) {  
-            String marker_info = myClient.readStringUntil('\n');      
+        for (int i=0; i<num; i++) {
+            String marker_info = myClient.readStringUntil('\n');
             if ( marker_info!= null ) {
-              background(122);   
+              background(122);
               String[] data = split(trim(marker_info),',');
               String name = data[0];
               int px = int(data[1]);
@@ -45,8 +46,8 @@ void draw() {
               textSize(26);
               text("Tracking Object",Fx+width/2+100, Fy-500);
               serial.write((int)(px/640.0*255));
-            }        
-        }       
+            }
+        }
       }
     }
     target1.x = 100;
@@ -55,7 +56,7 @@ void draw() {
     target1.GetRelativePolarCordinates(Fx,Fy);
     strokeWeight(10);
     text(degrees(-target1.theta),100,100);
-    line(int(Fx+width/2),int(Fy-500),int(100*cos(-target1.theta+PI/2)+Fx+width/2),int(100*sin(-target1.theta+PI/2)+Fy-500));
+    line(Fx+width/2,Fy-500,(100*cos(-target1.theta+PI/2)+Fx+width/2),int(100*sin(-target1.theta+PI/2)+Fy-500));
     /*robot.write(255);*/
     robot.write(int(-target1.theta)/254);
     /*if (target1.r> 200){
