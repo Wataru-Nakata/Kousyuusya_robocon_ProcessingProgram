@@ -63,7 +63,8 @@ void draw()
     //text(degrees(-target1.theta),100,100);
     line(Fx+width/2,Fy-500,(100*cos(-target1.theta+PI/2)+Fx+width/2),100*sin(-target1.theta+PI/2)+Fy-500);
     /*robot.write(255);*/
-    robot.write(int((-target1.theta+PI)/(2*PI)*254));
+    robot.write(int((target1.theta+PI)/(2*PI)*254));
+    text(int((target1.theta+PI)/(2*PI)*254),100,150);
     /*if (target1.r> 200){
       put = 200;
     }
