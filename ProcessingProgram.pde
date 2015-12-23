@@ -1,4 +1,4 @@
-//TODO:Make function that will convert relative into absolute!! 
+// TODO: Make function that will convert relative into absolute!!
 import processing.serial.*;
 import processing.net.*;
 Client myClient;
@@ -39,8 +39,10 @@ void draw() {
               float x = float(data[3]);
               float y = float(data[4]);
               float z = float(data[5]);
-              Fx = sqrt(x*x+z*z)*sin((cam/123.0)*PI/4.0);
-              Fy = sqrt(x*x+z*z)*cos((cam/123.0)*PI/4.0);
+              camtheta = (cam/123.0)*PI/4.0
+              RelativeToAbs(camtheta,&x,&z);
+              Fx = x;
+              Fy = y;
               image(img,Fx+width/2-50,Fy-500-50,100,100);
               fill(0, 102, 153);
               textSize(26);
@@ -80,4 +82,12 @@ class target{
       r = (x-robotx)*(x-robotx)+(y-roboty)*(y-roboty);
     }
   }
+}
+void RelativeToAbs(float theta2,float *x,float *y)
+{
+  float tempx,tempy;
+  tempx = *x;
+  tempy = *y;
+  *x = tempx*cos(theta2)-tempy*sin(theta2);
+  *y = tempx*sin(theta2)+tempy*cos(theta2);
 }
