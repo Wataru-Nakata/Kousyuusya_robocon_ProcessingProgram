@@ -1,4 +1,3 @@
-// TODO: Make function that will convert relative into absolute!!
 import processing.serial.*;
 import processing.net.*;
 Client myClient;
@@ -58,7 +57,7 @@ void draw() {
     target1.GetRelativePolarCordinates(Fx,Fy);
     strokeWeight(10);
     text(degrees(-target1.theta),100,100);
-    line(Fx+width/2,Fy-500,(100*cos(-target1.theta+PI/2)+Fx+width/2),int(100*sin(-target1.theta+PI/2)+Fy-500));
+    line(Fx+width/2,Fy-500,(100*cos(-target1.theta+PI/2)+Fx+width/2),100*sin(-target1.theta+PI/2)+Fy-500);
     /*robot.write(255);*/
     robot.write(int(-target1.theta)/254);
     /*if (target1.r> 200){
