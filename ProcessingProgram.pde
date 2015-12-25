@@ -67,8 +67,8 @@ void draw()
     text(int((target1.theta+PI)/(2*PI)*254),100,150);
     /*if (target1.r> 200){
       put = 200;
-    }
-    robot.write(put);*/
+    }*/
+    robot.write(put);
     myClient.clear();
   }
 }
