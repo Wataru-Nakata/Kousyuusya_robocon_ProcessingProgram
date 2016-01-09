@@ -21,7 +21,7 @@ public class ProcessingProgram extends PApplet {
 
 
 //Defines
-public static final int NumOfTarget= 4;
+public static final int NumOfTarget= 2;
 Client myClient;
 Serial serial,robot;
 int cam = 123,targetcount = 0;
@@ -40,10 +40,14 @@ public void setup()
   size(1280,720);
   frameRate(30);
   colorMode(RGB);
-  myClient = new Client(this,"192.168.0.14",55555);
+  myClient = new Client(this,"192.168.0.5",55555);
   serial = new Serial(this, "COM3", 9600);
   robot = new Serial(this,"COM8", 115200);
   img = loadImage("img_0.jpg");
+  target[0].x = 50;
+  target[0].y = 1000;
+  target[1].x = -50;
+  target[1].y = 1000;
 }
 //Main loop
 public void draw()
@@ -83,14 +87,11 @@ public void draw()
         }
       }
     }
-    target[targetcount].x = 0;
-    target[targetcount].y = 1000;
     ellipse(target[targetcount].x+width/2,target[targetcount].y-500,100,100);
     target[targetcount].GetRelativePolarCordinates(Fx,Fy);
     strokeWeight(10);
     //text(degrees(-target1.theta),100,100);
     line(Fx+width/2,Fy-500,(100*cos(-target[targetcount].theta+PI/2)+Fx+width/2),100*sin(-target[targetcount].theta+PI/2)+Fy-500);
-    robot.write(255);
     robot.write(PApplet.parseInt((target[targetcount].theta+PI)/(2*PI)*254));
     text("theta :" +PApplet.parseInt((target[targetcount].theta+PI)/(2*PI)*254),100,150);
     text(targetcount,100,200);
@@ -125,8 +126,10 @@ public void RelativeToAbs(float theta2)
   z = tempx*sin(theta2)+tempy*cos(theta2);
 }
 public void mouseClicked(){
-  if(targetcount<NumOfTarget){
+  if(targetcount<NumOfTarget-1){
     targetcount+= 1;
+  }else{
+    targetcount = 0;
   }
 }
   static public void main(String[] passedArgs) {
