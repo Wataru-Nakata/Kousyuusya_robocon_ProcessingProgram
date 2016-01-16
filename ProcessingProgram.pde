@@ -2,7 +2,7 @@
 import processing.serial.*;
 import processing.net.*;
 //Defines
-public static final int NumOfTarget= 2;
+public static final int NumOfTarget= 5;
 Client myClient;
 Serial serial,robot;
 int cam = 123,targetcount = 0;
@@ -21,14 +21,20 @@ void setup()
   size(1280,720);
   frameRate(30);
   colorMode(RGB);
-  myClient = new Client(this,"192.168.0.5",55555);
+  myClient = new Client(this,"192.168.0.6",55555);
   serial = new Serial(this, "COM3", 9600);
   robot = new Serial(this,"COM8", 115200);
   img = loadImage("img_0.jpg");
-  target[0].x = 50;
-  target[0].y = 1000;
-  target[1].x = -50;
-  target[1].y = 1000;
+  target[0].x = 400;
+  target[0].y = 800;
+  target[1].x = -400;
+  target[1].y = 800;
+  target[2].x = -400;
+  target[2].y = 1600;
+  target[3].x = 400;
+  target[3].y = 1600;
+  target[4].x = 400;
+  target[4].y = 800;
 }
 //Main loop
 void draw()
@@ -63,7 +69,7 @@ void draw()
               text("Fx :"+Fx,100,50);
               text("Fy :"+Fy,100,100);
               text("Tracking Object",Fx+width/2+100, Fy-500);
-              serial.write((int)(px/640.0*255));
+              serial.write((int)(px/800.0*255));
             }
         }
       }
@@ -75,11 +81,19 @@ void draw()
     line(Fx+width/2,Fy-500,(100*cos(-target[targetcount].theta+PI/2)+Fx+width/2),100*sin(-target[targetcount].theta+PI/2)+Fy-500);
     robot.write(int((target[targetcount].theta+PI)/(2*PI)*254));
     text("theta :" +int((target[targetcount].theta+PI)/(2*PI)*254),100,150);
-    text(targetcount,100,200);
+    text("r :"+target[targetcount].r,100,200);
+    text("target :"+targetcount,100,250);
     /*if (target[targetcount].r> 200){
       put = 200;
     }*/
     //robot.write(put);
+    if(target[targetcount].r < 5){
+      if(targetcount<NumOfTarget-1){
+        targetcount+= 1;
+      }else{
+        targetcount = 0;
+      }
+    }
     myClient.clear();
   }
 }
