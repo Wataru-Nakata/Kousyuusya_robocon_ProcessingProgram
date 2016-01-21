@@ -2,13 +2,15 @@
 import processing.serial.*;
 import processing.net.*;
 //Defines
-public static final int NumOfTarget= 5;
+public static final int NumOfTarget= 10;
 Client myClient;
 Serial serial,robot;
+int MODE = 0; //1 : READ 0 : WRITE
 int cam = 123,targetcount = 0;
 PImage img;
 float Fx = 0,Fy = 0,x = 0,y=0,z=0;
 char put = 0;
+Table targets;
 //target initialization
 target[] target = new target[NumOfTarget];
 //Program init
@@ -18,23 +20,36 @@ void setup()
   {
     target[i] = new target();
   }
+  if(MODE == 1){
+    targets = loadTable("data/target.csv");
+    int i = 0;
+    for(TableRow row : targets.rows()){
+      target[i].x = row.getFloat("x");
+      target[i].y = row.getFloat("y");
+      i++;
+    }
+  }else{
+    targets = new Table();
+    targets.addColumn("x");
+    targets.addColumn("y");
+  }
   size(1280,720);
   frameRate(30);
   colorMode(RGB);
-  myClient = new Client(this,"192.168.0.6",55555);
-  serial = new Serial(this, "COM3", 9600);
+  myClient = new Client(this,"192.168.0.7",55555);
+  serial = new Serial(this, "COM12", 9600);
   robot = new Serial(this,"COM8", 115200);
   img = loadImage("img_0.jpg");
-  target[0].x = 400;
-  target[0].y = 800;
-  target[1].x = -400;
-  target[1].y = 800;
-  target[2].x = -400;
-  target[2].y = 1600;
-  target[3].x = 400;
-  target[3].y = 1600;
-  target[4].x = 400;
-  target[4].y = 800;
+  target[0].x = 120;
+  target[0].y = 308;
+  target[1].x = 202;
+  target[1].y = 1180;
+  target[2].x = 10;
+  target[2].y = 1200;
+  target[3].x = 10;
+  target[3].y = 1430;
+  target[4].x = 220;
+  target[4].y = 1440;
 }
 //Main loop
 void draw()
@@ -87,7 +102,7 @@ void draw()
       put = 200;
     }*/
     //robot.write(put);
-    if(target[targetcount].r < 5){
+    if(target[targetcount].r < 200){
       if(targetcount<NumOfTarget-1){
         targetcount+= 1;
       }else{
@@ -126,4 +141,16 @@ void mouseClicked(){
   }else{
     targetcount = 0;
   }
+}
+void keyTyped(){
+  if(key == char(ENTER)){
+    TableRow newRow = targets.addRow();
+    newRow.setFloat("x",Fx);
+    newRow.setFloat("y",Fy);
+  }else if(key == 'q'){
+    if(MODE == 0){
+      saveTable(targets,"data/target.csv");
+    }
+    exit();
+  }   
 }

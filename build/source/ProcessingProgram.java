@@ -40,20 +40,20 @@ public void setup()
   size(1280,720);
   frameRate(30);
   colorMode(RGB);
-  myClient = new Client(this,"192.168.0.6",55555);
+  myClient = new Client(this,"192.168.0.5",55555);
   serial = new Serial(this, "COM3", 9600);
   robot = new Serial(this,"COM8", 115200);
   img = loadImage("img_0.jpg");
-  target[0].x = 400;
-  target[0].y = 800;
-  target[1].x = -400;
-  target[1].y = 800;
-  target[2].x = -400;
-  target[2].y = 1600;
-  target[3].x = 400;
-  target[3].y = 1600;
-  target[4].x = 400;
-  target[4].y = 800;
+  target[0].x = 120;
+  target[0].y = 308;
+  target[1].x = 202;
+  target[1].y = 1180;
+  target[2].x = 10;
+  target[2].y = 1200;
+  target[3].x = 10;
+  target[3].y = 1430;
+  target[4].x = 220;
+  target[4].y = 1440;
 }
 //Main loop
 public void draw()
@@ -106,7 +106,7 @@ public void draw()
       put = 200;
     }*/
     //robot.write(put);
-    if(target[targetcount].r < 5){
+    if(target[targetcount].r < 200){
       if(targetcount<NumOfTarget-1){
         targetcount+= 1;
       }else{
