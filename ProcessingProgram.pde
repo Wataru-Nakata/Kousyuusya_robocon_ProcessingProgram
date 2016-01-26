@@ -6,6 +6,7 @@ public static final int NumOfTarget= 10;
 Client myClient;
 Serial serial,robot;
 int MODE = 1; //1 : READ 0 : WRITE
+int start = 0;
 int cam = 123,targetcount = 0;
 PImage img;
 float Fx = 0,Fy = 0,x = 0,y=0,z=0;
@@ -41,24 +42,26 @@ void setup()
   serial = new Serial(this, "COM3", 9600);
   robot = new Serial(this,"COM8", 115200);
   img = loadImage("img_0.jpg");
-  target[0].x = 116;
-  target[0].y = 308;
-  target[1].x = 173;
-  target[1].y = 976;
+  target[0].x = 134;
+  target[0].y = 500;
+  target[1].x = 125;
+  target[1].y = 964;
   target[2].x = -60;
-  target[2].y = 968;
-  target[3].x = -8;
-  target[3].y = 1204;
-  target[4].x = 178;
-  target[4].y = 1213;
-  target[5].x = 195;
-  target[5].y = 1425;
-  target[6].x = -35;
-  target[6].y = 1440;
-  target[7].x = -4;
-  target[7].y = 1701;
-  target[8].x = 184;
+  target[2].y = 1000;
+  target[3].x = -60;
+  target[3].y = 1210;
+  target[4].x = 150;
+  target[4].y = 1220;
+  target[5].x = 170;
+  target[5].y = 1450;
+  target[6].x = -80;
+  target[6].y = 1425;
+  target[7].x = -9;
+  target[7].y = 1760;
+  target[8].x = 170;
   target[8].y = 1670;
+  target[9].x = 200;
+  target[9].y = 2674;
 
 }
 //Main loop
@@ -104,7 +107,15 @@ void draw()
     strokeWeight(10);
     //text(degrees(-target1.theta),100,100);
     line(Fx+width/2,Fy-500,(100*cos(-target[targetcount].theta+PI/2)+Fx+width/2),100*sin(-target[targetcount].theta+PI/2)+Fy-500);
-    robot.write(int((target[targetcount].theta+PI)/(2*PI)*254));
+    if(start%2==0){
+      robot.write(255);
+      text("STOP",100,300);
+    }else if(targetcount == 9){
+      robot.write(127);
+    }else{
+      robot.write(int((target[targetcount].theta+PI)/(2*PI)*254));
+      text("MOVING",100,300);
+    }
     text("theta :" +int((target[targetcount].theta+PI)/(2*PI)*254),100,150);
     text("r :"+target[targetcount].r,100,200);
     text("target :"+targetcount,100,250);
@@ -112,7 +123,7 @@ void draw()
       put = 200;
     }*/
     //robot.write(put);
-    if(target[targetcount].r < 200){
+    if(target[targetcount].r < 100){
       if(targetcount<NumOfTarget-1){
         targetcount+= 1;
       }else{
@@ -160,5 +171,7 @@ void keyTyped(){
     saveTable(targets,"data/target.csv");
   }else if(key == 'q'){
     exit();
+  }else if (key ==' '){
+    start++;
   }
 }
